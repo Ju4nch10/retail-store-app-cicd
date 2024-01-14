@@ -1,10 +1,10 @@
 pipeline {
     agent any
     environment{
-        DOCKER_HUB_LOGIN = credentials('docker')
-        REGISTRY = "roxsross12"
+        DOCKER_HUB_LOGIN = credentials('docker-hub')
+        REGISTRY = "jdinucci"
         REPOSITORY= "retail-store-app"
-        SERVER= "ec2-user@35.84.193.83"
+        //SERVER= "ec2-user@35.84.193.83"
     }
     stages {
         stage('docker build') {
@@ -38,7 +38,16 @@ pipeline {
                 cat docker-compose.prod.yml
                 '''
             }
-        } 
+        }
+        stage('Deploy local') {
+            steps {
+                sh '''
+                docker-compose up -d 
+                '''
+                }
+            }
+        }
+        /*
         stage('Deploy To EC2') {
             steps {
                 sshagent (['ssh-aws']) {
@@ -50,6 +59,7 @@ pipeline {
 
                 }
             }
-        }                
+        }
+        */                
     }
 }
